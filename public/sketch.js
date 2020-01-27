@@ -27,8 +27,6 @@ function setup() {
 
   // Create a new poseNet method with a single detection
   poseNet = ml5.poseNet(options);
-  // This sets up an event that fills the global variable "poses"
-  // with an array every time new  are detected
 
   snapshot = select('#addPhoto');
   snapshot.mousePressed(function() {
@@ -43,8 +41,6 @@ function setup() {
       poses.length = 0;
       myp5_1.poses.length = 0;
       document.getElementById("Name").innerHTML = "Name: ";
-  //    myp5_1.img.hide(); //need to really delete this
-      // clear myp5_1 canvas
       addPhoto.innerHTML = "Capture Pose";
     }
     });
@@ -57,11 +53,6 @@ function setup() {
   // Hide the video element, and just show the canvas
   video.hide();
 
-  // For when a new picture is uploaded to the website.
-  // This watches the filePicker element, if there is a change it populates
-  // the form with the poses array.
-// filePicker = select('#filePicker');
-//  filePicker.changed(classifyUpload);
 };
 
 
@@ -179,10 +170,6 @@ request.done(function (response){
     buffer = response[1];
 
     player_name = response[0]['Name'];
-  //  score = response[0]['Score'];
-//    Body = {'Back': response[0]['Back'],
-//            'Legs':  response[0]['Legs'],
-//            'Arms': response[0]['Arms']};
       Body = response[0];
 
     full_b64 = "data:image/png;base64," + buffer;
@@ -192,7 +179,6 @@ request.done(function (response){
     myp5_1.img.hide();
 
     document.getElementById("Name").innerHTML = "Name: " + player_name;
-//    document.getElementById("Score").innerHTML = "Score: " + round(100-((score*10)*100)) + "%";
     });
 }
 
@@ -248,43 +234,6 @@ function draw() {
   rect(0, 0, width, height);
 }
 
-// // A function to draw ellipses over the detected keypoints
-// function drawKeypoints()  {
-//   // Loop through all the poses detected
-//   for (let i = 0; i < poses.length; i++) {
-//     // For each pose detected, loop through all the keypoints
-//     for (let j = 0; j < poses[i].pose.keypoints.length; j++) {
-//       // A keypoint is an object describing a body part (like rightArm or leftShoulder)
-//       let keypoint = poses[i].pose.keypoints[j];
-//       // Only draw an ellipse is the pose probability is bigger than 0.2
-//       if (keypoint.score > 0.2) {
-//         fill(224, 26, 58);
-//         noStroke();
-//         ellipse(keypoint.position.x, keypoint.position.y, 10, 10);
-//       }
-//     }
-//   }
-// }
-
-// myp5_1.drawKeypoints = function()  {
-//   // Loop through all the poses detected
-//   for (let i = 0; i < myp5_1.poses.length; i++) {
-//     // For each pose detected, loop through all the keypoints
-//     for (let j = 0; j < myp5_1.poses[i].pose.keypoints.length; j++) {
-//       // A keypoint is an object describing a body part (like rightArm or leftShoulder)
-//       myp5_1.keypoint = myp5_1.poses[i].pose.keypoints[j];
-//       myp5_1.keypoint.position.x = myp5_1.keypoint.position.x;
-//       myp5_1.keypoint.position.y = myp5_1.keypoint.position.y;
-//       // Only draw an ellipse is the pose probability is bigger than 0.2
-//       if (myp5_1.keypoint.score > 0.2) {
-//         myp5_1.fill(224, 26, 58);
-//         myp5_1.noStroke();
-//         myp5_1.ellipse(myp5_1.keypoint.position.x*myp5_1.scalingFactor, myp5_1.keypoint.position.y*myp5_1.scalingFactor, 10, 10);
-//       }
-//     }
-//   }
-// }
-
 
 // A function to draw the skeletons
 function drawSkeleton() {
@@ -305,16 +254,10 @@ function drawSkeleton() {
 
 // A function to draw the skeletons
 myp5_1.drawSkeleton = function() {
-  // Loop through all the skeletons detected
-//  for (let i = 0; i < myp5_1.poses.length; i++) {
-    // For every skeleton, loop through all body connections
-  //  for (let j = 0; j < 1; j++) {
-//  console.log(myp5_1.poses[0].skeleton)
     for (let j = 0; j < myp5_1.poses[0].skeleton.length; j++) {
       let partAname = myp5_1.poses[0].skeleton[j][0]["part"]
       let partBname = myp5_1.poses[0].skeleton[j][1]["part"]
       let Bodyparts = Object.keys(Body)
-//      console.log(Object.entries(Body))
     for (let k = 0; k < poses[0].skeleton.length; k++) {
       let partA = myp5_1.poses[0].skeleton[j][0];
       let partB = myp5_1.poses[0].skeleton[j][1];
@@ -324,23 +267,12 @@ myp5_1.drawSkeleton = function() {
       {
         if (Bodyparts[i].includes(partAname && partBname) && confidenceString.includes(partAname && partBname)) {
           if (Object.entries(Body)[i][1] > 0.97 && confidence > 0.90 && Object.entries(Body)[i][0].includes(partAname) && Object.entries(Body)[i][0].includes(partBname) ) {
-            //console.log(Object.entries(Body)[i])
-            //console.log(myp5_1.poses[0].skeleton[j][0]["part"])
-            //console.log(myp5_1.poses[0].skeleton[j][1]["part"])
             let alpha = confidence
-      //      myp5_1.strokeWeight(confidence*10) // * (confidence values))
-    //    myp5_1.strokeWeight(10);
             myp5_1.stroke(0,98,255);
             myp5_1.line((partA.position.x*myp5_1.scalingFactor + ((myp5_1.width/2)-(myp5_1.img.width/2))), (partA.position.y*myp5_1.scalingFactor + ((myp5_1.height/2)-(myp5_1.img.height/2))), (partB.position.x*myp5_1.scalingFactor + ((myp5_1.width/2)-(myp5_1.img.width/2))), (partB.position.y*myp5_1.scalingFactor + ((myp5_1.height/2)-(myp5_1.img.height/2))));
       }
       }
       }
-      // let found = $(Body).find(function(element) {
-      //   $(element).includes(partAname && partBname)
-      // });
-//      myp5_1.stroke(224, 26, 58);
-//      myp5_1.line((partA.position.x*myp5_1.scalingFactor + ((myp5_1.width/2)-(myp5_1.img.width/2))), (partA.position.y*myp5_1.scalingFactor + ((myp5_1.height/2)-(myp5_1.img.height/2))), (partB.position.x*myp5_1.scalingFactor + ((myp5_1.width/2)-(myp5_1.img.width/2))), (partB.position.y*myp5_1.scalingFactor + ((myp5_1.height/2)-(myp5_1.img.height/2))));
     }
-//  }}
 }
 }
